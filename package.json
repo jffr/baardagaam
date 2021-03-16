@@ -1,0 +1,33 @@
+{
+  "name": "baardagaam",
+  "version": "1.0.0",
+  "description": "Another build tool with Gulp and Webpack",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development gulp",
+    "build": "cross-env NODE_ENV=production gulp build"
+  },
+  "author": "Jeffrey Dufour",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@svgr/webpack": "^5.5.0",
+    "babel-loader": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "del": "^6.0.0",
+    "file-loader": "^6.2.0",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0",
+    "sass": "^1.32.8",
+    "webpack": "^5.24.4",
+    "webpack-merge": "^5.7.3",
+    "webpack-stream": "^6.1.2"
+  },
+  "dependencies": {
+
+  }
+}
