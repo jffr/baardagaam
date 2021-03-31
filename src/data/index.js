@@ -1,4 +1,4 @@
-const site = require("./site");
+const site = require('./site');
 
 module.exports = {
   site,

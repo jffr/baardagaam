@@ -1,3 +1,5 @@
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+
 module.exports = {
   output: {
     filename: '[name].bundle.[fullhash].js',
@@ -26,4 +28,10 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
+  plugins: [
+    new WebpackManifestPlugin({
+      publicPath: '/scripts/',
+      removeKeyHash: true
+    })
+  ]
 };

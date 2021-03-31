@@ -4,9 +4,14 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Title of document</title>
+    <title>{{ site.name }}</title>
+    <link rel="stylesheet" href="/styles/main.css">
   </head>
   <body>
-    {% block content %}{% endblock %}
+    {% block content %}
+      <!-- Content goes here -->
+    {% endblock %}
+
+    <script src="{{ manifest['main.js'] }}"></script>
   </body>
 </html>

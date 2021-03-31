@@ -1,46 +1,34 @@
-const { src, dest, series, parallel } = require('gulp');
+const browserSync = require('browser-sync');
 const del = require('del');
+const { src, dest, series, watch } = require('gulp');
 const sass = require('gulp-dart-sass');
-const sourcemaps = require('gulp-sourcemaps');
 const nunjucks = require('gulp-nunjucks');
+const prettier = require('gulp-prettier');
+const sourcemaps = require('gulp-sourcemaps');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
+const data = require('./src/data');
 const webpackDevConfig = require('./webpack.dev.js');
 const webpackProdConfig = require('./webpack.prod.js');
-const templateData = require('./src/data');
 
-/*
-  TODO:
-  - Production and development builds
-  - Display detailed Webpack errors
-  - Clean task
-  - Webpack (JS + TS) task
-  - Babel support with default setting
-  - Dev server
-  - SASS
-  - Hot module reloading
-  - Publish task
-  - Watch task
-  - Autoprefixes researching
-  - Fonts
-  - Images
-  - SVG store (icon spritesheet)
-*/
-
+const devServer = browserSync.create();
 const isProdMode = process.env.NODE_ENV === 'production';
 
 const paths = {
   styles: {
-    src: 'src/styles/main.scss',
+    entry: 'src/styles/main.scss',
     dest: 'dist/styles/',
+    files: 'src/styles/**/*.scss',
   },
   scripts: {
-    src: 'src/scripts/main.ts',
+    entry: 'src/scripts/main.ts',
     dest: 'dist/scripts/',
+    files: 'src/scripts/**/*.ts',
   },
   templates: {
-    src: 'src/templates/index.njk',
-    dest: 'dist/templates/',
+    entry: 'src/templates/index.njk',
+    dest: 'dist/',
+    files: 'src/templates/**/*.njk',
   },
 };
 
@@ -51,24 +39,48 @@ function clean() {
 function scripts() {
   const config = isProdMode ? webpackProdConfig : webpackDevConfig;
 
-  return src(paths.scripts.src)
+  return src(paths.scripts.entry)
     .pipe(webpackStream(config, webpack))
     .pipe(dest(paths.scripts.dest));
 }
 
 function styles() {
-  return src(paths.styles.src)
+  return src(paths.styles.entry)
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(sass())
     .pipe(sourcemaps.write('.', { addComment: false }))
-    .pipe(dest(paths.styles.dest));
+    .pipe(dest(paths.styles.dest))
+    .pipe(browserSync.stream());
 }
 
 function templates() {
-  return src(paths.templates.src)
-    .pipe(nunjucks.compile(templateData))
+  const manifest = require('./dist/scripts/manifest.json');
+
+  return src(paths.templates.entry)
+    .pipe(nunjucks.compile({
+      ...data,
+      manifest
+    }))
     .pipe(dest(paths.templates.dest));
 }
 
-exports.default = series(clean, templates, styles, scripts);
-exports.build = series(clean, templates, styles, scripts);
+function formatter() {
+  return src([paths.scripts.files, paths.styles.files])
+    .pipe(prettier())
+    .pipe(dest((file) => file.base));
+}
+
+function serve() {
+  devServer.init({
+    server: {
+      baseDir: "./dist"
+    }
+  })
+
+  watch(paths.styles.files, styles);
+  watch(paths.scripts.files, scripts);
+  watch(paths.templates.files, templates).on('change', devServer.reload);
+}
+
+exports.default = series(clean, scripts, templates, styles, serve);
+exports.build = series(clean, formatter, scripts, templates, styles);
