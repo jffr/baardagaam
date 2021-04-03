@@ -1,5 +1,8 @@
 export default class Hello {
   render() {
-    return 'Hello world';
+    const paragraph = document.createElement('p');
+    paragraph.textContent = "Hello world!";
+
+    return paragraph;
   }
 }

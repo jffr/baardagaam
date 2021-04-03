@@ -1,9 +1,12 @@
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const path = require('path');
 
 module.exports = {
   output: {
     filename: '[name].bundle.[fullhash].js',
     chunkFilename: '[name].chunk.[chunkhash].js',
+    path: path.join(__dirname, 'dist', 'scripts'),
+    publicPath: '/dist/'
   },
   devtool: 'source-map',
   stats: 'errors-warnings',

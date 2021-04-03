@@ -7,12 +7,16 @@ const prettier = require('gulp-prettier');
 const sourcemaps = require('gulp-sourcemaps');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
-const data = require('./src/data');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const templateData = require('./src/data');
 const webpackDevConfig = require('./webpack.dev.js');
 const webpackProdConfig = require('./webpack.prod.js');
 
 const devServer = browserSync.create();
 const isProdMode = process.env.NODE_ENV === 'production';
+const webpackConfig = isProdMode ? webpackProdConfig : webpackDevConfig;
+const bundler = webpack(webpackConfig);
 
 const paths = {
   styles: {
@@ -53,14 +57,17 @@ function styles() {
     .pipe(browserSync.stream());
 }
 
+// TODO: Make sure that the file is not cached.
 function templates() {
   const manifest = require('./dist/scripts/manifest.json');
 
   return src(paths.templates.entry)
-    .pipe(nunjucks.compile({
-      ...data,
-      manifest
-    }))
+    .pipe(
+      nunjucks.compile({
+        ...templateData,
+        manifest,
+      })
+    )
     .pipe(dest(paths.templates.dest));
 }
 
@@ -73,12 +80,17 @@ function formatter() {
 function serve() {
   devServer.init({
     server: {
-      baseDir: "./dist"
-    }
-  })
+      baseDir: './dist',
+      middleware: [
+        webpackDevMiddleware(bundler, {
+          stats: { color: true },
+        }),
+        webpackHotMiddleware(bundler),
+      ],
+    },
+  });
 
-  watch(paths.styles.files, styles);
-  watch(paths.scripts.files, scripts);
+  watch(paths.styles.files, styles).on('change', devServer.reload);
   watch(paths.templates.files, templates).on('change', devServer.reload);
 }
 
