@@ -11,7 +11,7 @@ class Alert {
   }
 
   dispose() {
-    this._node.removeEventListener('click', this.handleClick)
+    this._node.removeEventListener('click', this.handleClick);
   }
 }
 
