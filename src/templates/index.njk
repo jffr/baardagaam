@@ -1,5 +1,7 @@
 {% extends "layout.njk" %}
 
 {% block content %}
-  <p class="hello">Hello {{ site.name }}</p>
+  <div class="js-hello-world" data-name="{{ site.name }}"></div>
+  <button class="js-alert">Click for alert!</button>
+  <div class="js-lazy">Lazy</div>
 {% endblock %}
