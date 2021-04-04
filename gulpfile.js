@@ -51,7 +51,11 @@ function scripts() {
 function styles() {
   return src(paths.styles.entry)
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(sass())
+    .pipe(
+      sass({
+        includePaths: ['node_modules'],
+      })
+    )
     .pipe(sourcemaps.write('.', { addComment: false }))
     .pipe(dest(paths.styles.dest))
     .pipe(browserSync.stream());
