@@ -2,14 +2,16 @@ const browserSync = require('browser-sync');
 const del = require('del');
 const { src, dest, series, watch } = require('gulp');
 const sass = require('gulp-dart-sass');
-const nunjucks = require('gulp-nunjucks');
+const ejs = require('gulp-ejs');
 const prettier = require('gulp-prettier');
 const sourcemaps = require('gulp-sourcemaps');
+const rename = require('gulp-rename');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const templateData = require('./src/data');
+const ejsHelpers = require('./src/templates/helpers');
 const webpackDevConfig = require('./webpack.dev.js');
 const webpackProdConfig = require('./webpack.prod.js');
 
@@ -30,9 +32,9 @@ const paths = {
     files: 'src/scripts/**/*.ts',
   },
   templates: {
-    entry: 'src/templates/index.njk',
+    entry: 'src/templates/index.ejs',
     dest: 'dist/',
-    files: 'src/templates/**/*.njk',
+    files: 'src/templates/**/*.ejs',
   },
 };
 
@@ -66,12 +68,8 @@ function templates() {
   const manifest = require('./dist/scripts/manifest.json');
 
   return src(paths.templates.entry)
-    .pipe(
-      nunjucks.compile({
-        ...templateData,
-        manifest,
-      })
-    )
+    .pipe(ejs({ ...templateData, ...ejsHelpers }))
+    .pipe(rename({ extname: '.html' }))
     .pipe(dest(paths.templates.dest));
 }
 
