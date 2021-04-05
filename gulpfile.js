@@ -65,8 +65,6 @@ function styles() {
 
 // TODO: Make sure that the file is not cached.
 function templates() {
-  const manifest = require('./dist/scripts/manifest.json');
-
   return src(paths.templates.entry)
     .pipe(ejs({ ...templateData, ...ejsHelpers }))
     .pipe(rename({ extname: '.html' }))
@@ -82,14 +80,14 @@ function formatter() {
 function serve() {
   devServer.init({
     server: {
-      baseDir: './dist',
-      middleware: [
-        webpackDevMiddleware(bundler, {
-          stats: { color: true },
-        }),
-        webpackHotMiddleware(bundler),
-      ],
+      baseDir: 'dist'
     },
+    middleware: [
+      webpackDevMiddleware(bundler, {
+        // stats: { color: true },
+      }),
+      webpackHotMiddleware(bundler),
+    ],
   });
 
   watch(paths.styles.files, styles).on('change', devServer.reload);

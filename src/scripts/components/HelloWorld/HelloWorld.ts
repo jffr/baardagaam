@@ -9,7 +9,7 @@ class HelloWorld {
   init() {
     const name = this._rootElement.dataset.name;
     const p = document.createElement('p');
-    p.textContent = `Hello ${name}!`;
+    p.textContent = `Goodbye ${name}!`;
     this._rootElement.appendChild(p);
   }
 
