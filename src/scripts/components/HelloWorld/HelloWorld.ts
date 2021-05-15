@@ -1,4 +1,6 @@
-class HelloWorld {
+import { IDispose } from "../../utils/ComponentDisposer";
+
+class HelloWorld implements IDispose {
   private _rootElement: HTMLDivElement;
 
   constructor(rootElement: HTMLDivElement) {
@@ -13,7 +15,7 @@ class HelloWorld {
     this._rootElement.appendChild(p);
   }
 
-  public dispose(): void {
+  dispose(): void {
     this._rootElement.innerHTML = '';
   }
 }

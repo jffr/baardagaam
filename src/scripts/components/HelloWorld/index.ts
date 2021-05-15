@@ -1,3 +1,4 @@
+import { ComponentDisposer } from '../../utils/ComponentDisposer';
 import HelloWorld from './HelloWorld';
 
 const targets = Array.from(
@@ -6,9 +7,7 @@ const targets = Array.from(
 const instances = targets.map((node) => new HelloWorld(node));
 
 module.hot.dispose(() => {
-  instances.forEach((component) => {
-    component.dispose();
-  });
+  ComponentDisposer(instances);
 });
 
 export default instances;

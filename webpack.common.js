@@ -3,8 +3,8 @@ const path = require('path');
 
 module.exports = {
   output: {
-    filename: '[name].bundle.[fullhash].js',
-    chunkFilename: '[name].chunk.[chunkhash].js',
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].chunk.js',
     path: path.join(__dirname, 'dist', 'scripts'),
     publicPath: '/dist/'
   },

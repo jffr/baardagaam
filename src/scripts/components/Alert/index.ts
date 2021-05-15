@@ -1,3 +1,4 @@
+import { ComponentDisposer } from '../../utils/ComponentDisposer';
 import Alert from './Alert';
 
 const targets = Array.from(
@@ -6,9 +7,7 @@ const targets = Array.from(
 const instances = targets.map((target) => new Alert(target));
 
 module.hot.dispose(() => {
-  instances.forEach((component) => {
-    component.dispose();
-  });
+  ComponentDisposer(instances);
 });
 
 export default instances;

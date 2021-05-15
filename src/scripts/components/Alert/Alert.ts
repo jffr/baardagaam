@@ -1,4 +1,6 @@
-class Alert {
+import { IDispose } from "../../utils/ComponentDisposer";
+
+class Alert implements IDispose {
   private _node: HTMLButtonElement;
 
   constructor(node: HTMLButtonElement) {
