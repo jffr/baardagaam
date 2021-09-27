@@ -84,7 +84,8 @@ function serve() {
     },
     middleware: [
       webpackDevMiddleware(bundler, {
-        // stats: { color: true },
+        stats: { color: true },
+        writeToDisk: true
       }),
       webpackHotMiddleware(bundler),
     ],
